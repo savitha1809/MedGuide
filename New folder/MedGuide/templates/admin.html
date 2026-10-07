@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – MedGuide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <span class="logo-pill">💊</span>
+      <span>Med<span class="grad">Guide</span></span>
+    </a>
+    <nav class="nav">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/admin" class="nav-link active">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="admin-main">
+  <div class="container">
+    <div class="admin-header">
+      <h1 class="page-title">⚙️ Admin <span class="grad">Dashboard</span></h1>
+      <p class="page-sub">Add or remove medicines from the database.</p>
+    </div>
+
+    <!-- NOTE ABOUT VERCEL -->
+    <div class="vercel-note">
+      <span>ℹ️</span>
+      <p><strong>Note:</strong> On Vercel's free tier, the database resets on each cold start (serverless limitation). Added medicines persist during the active session. For full persistence, connect a cloud database like <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>.</p>
+    </div>
+
+    <!-- ADD MEDICINE FORM -->
+    <div class="admin-card">
+      <h2 class="admin-section-title">➕ Add New Medicine</h2>
+      <form action="/add" method="POST" class="med-form" id="add-form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="medicine_name">Medicine Name <span class="req">*</span></label>
+            <input id="medicine_name" type="text" name="medicine_name" placeholder="e.g. Paracetamol" required />
+          </div>
+          <div class="form-group">
+            <label for="category">Category <span class="req">*</span></label>
+            <select id="category" name="category" required>
+              <option value="" disabled selected>Select category</option>
+              <option value="Tablet">💊 Tablet</option>
+              <option value="Capsule">🔵 Capsule</option>
+              <option value="Syrup">🧴 Syrup</option>
+              <option value="Ointment">🩹 Ointment</option>
+              <option value="Drops">💧 Drops</option>
+              <option value="Injection">💉 Injection</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="composition">Composition</label>
+          <input id="composition" type="text" name="composition" placeholder="e.g. Paracetamol 500mg" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="uses">Common Uses</label>
+            <textarea id="uses" name="uses" rows="3" placeholder="What is this medicine used for?"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="purpose">Purpose</label>
+            <textarea id="purpose" name="purpose" rows="3" placeholder="Specific purpose / indication"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="precautions">Precautions</label>
+            <textarea id="precautions" name="precautions" rows="3" placeholder="Things to be careful about"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="side_effects">Side Effects</label>
+            <textarea id="side_effects" name="side_effects" rows="3" placeholder="Possible side effects"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="warnings">Warnings</label>
+          <textarea id="warnings" name="warnings" rows="2" placeholder="Important warnings"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">➕ Add Medicine</button>
+      </form>
+    </div>
+
+    <!-- MEDICINE TABLE -->
+    <div class="admin-card">
+      <div class="table-header-row">
+        <h2 class="admin-section-title" style="margin-bottom:0">📋 Medicine List</h2>
+        <span class="count-badge">{{ medicines|length }} records</span>
+      </div>
+
+      {% if medicines %}
+      <div class="table-wrap">
+        <table class="med-table" id="med-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Medicine Name</th>
+              <th>Category</th>
+              <th>Composition</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in medicines %}
+            <tr id="row-{{ m['id'] }}">
+              <td class="td-id">{{ m['id'] }}</td>
+              <td><a href="/medicine/{{ m['id'] }}" class="table-link">{{ m['medicine_name'] }}</a></td>
+              <td><span class="cat-tag cat-{{ m['category']|lower }}">{{ m['category'] }}</span></td>
+              <td class="td-comp">{{ m['composition'] or '—' }}</td>
+              <td>
+                <form action="/delete/{{ m['id'] }}" method="POST"
+                      onsubmit="return confirm('Delete {{ m['medicine_name'] }}?')">
+                  <button type="submit" class="del-btn" id="del-{{ m['id'] }}">🗑 Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No medicines yet</h3>
+        <p>Add your first medicine using the form above.</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="logo">💊 Med<span class="grad">Guide</span></span>
+    <p>© 2026 MedGuide · For educational and informational use only.</p>
+  </div>
+</footer>
+
+</body>
+</html>

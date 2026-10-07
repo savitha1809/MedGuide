@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ medicine['medicine_name'] }} – Uses, dosage, side effects and precautions on MedGuide." />
+  <title>{{ medicine['medicine_name'] }} – MedGuide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <span class="logo-pill">💊</span>
+      <span>Med<span class="grad">Guide</span></span>
+    </a>
+    <nav class="nav">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/admin" class="nav-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<!-- DETAIL PAGE -->
+<main class="detail-main">
+  <div class="container">
+
+    <!-- BACK LINK -->
+    <a href="/" class="breadcrumb">← Back to medicines</a>
+
+    <!-- MEDICINE HERO CARD -->
+    <div class="detail-hero">
+      <div class="detail-icon">
+        {% if medicine['category'] == 'Tablet' %}💊
+        {% elif medicine['category'] == 'Capsule' %}🔵
+        {% elif medicine['category'] == 'Syrup' %}🧴
+        {% elif medicine['category'] == 'Ointment' %}🩹
+        {% else %}🏥{% endif %}
+      </div>
+      <div class="detail-title-wrap">
+        <h1 class="detail-title">{{ medicine['medicine_name'] }}</h1>
+        <span class="cat-tag cat-{{ medicine['category']|lower }} cat-lg">{{ medicine['category'] }}</span>
+      </div>
+    </div>
+
+    <!-- INFO BOXES GRID -->
+    <div class="info-grid">
+
+      <div class="info-box">
+        <div class="info-label"><span>🧪</span> Composition</div>
+        <p>{{ medicine['composition'] or '—' }}</p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-label"><span>🎯</span> Common Uses</div>
+        <p>{{ medicine['uses'] or '—' }}</p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-label"><span>📌</span> Purpose</div>
+        <p>{{ medicine['purpose'] or '—' }}</p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-label"><span>🛡️</span> Precautions</div>
+        <p>{{ medicine['precautions'] or '—' }}</p>
+      </div>
+
+      <div class="info-box info-amber">
+        <div class="info-label"><span>⚕️</span> Possible Side Effects</div>
+        <p>{{ medicine['side_effects'] or '—' }}</p>
+      </div>
+
+      <div class="info-box info-red">
+        <div class="info-label"><span>🚨</span> Warnings</div>
+        <p>{{ medicine['warnings'] or '—' }}</p>
+      </div>
+
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="detail-disclaimer">
+      <strong>⚠️ Medical Disclaimer</strong>
+      <p>This application provides general educational information only. It does not diagnose diseases, prescribe medicines, or replace advice from a qualified doctor or pharmacist. Always seek professional medical guidance.</p>
+    </div>
+
+    <a href="/" class="back-btn" style="display:inline-block;margin-top:2rem">← Back to Home</a>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="logo">💊 Med<span class="grad">Guide</span></span>
+    <p>© 2026 MedGuide · For educational and informational use only.</p>
+  </div>
+</footer>
+
+</body>
+</html>
