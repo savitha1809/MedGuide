@@ -193,6 +193,7 @@ def create_database():
 # ──────────────────────────────────────────────────────────────────────────────
 
 @app.route("/")
+@app.route("/api/index")
 def home():
     create_database()
     conn = get_db()
